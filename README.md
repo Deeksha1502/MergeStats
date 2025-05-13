@@ -104,7 +104,7 @@ The frontend will run on http://localhost:5173 (or another port if 5173 is in us
 
 ### 📊 Dashboard View
 
-![Dashboard](./assets/dashboard.png)
+![Dashboard](./assets/Dashboard.png)
 
 ![Graph](./assets/Graph1.png)
 
