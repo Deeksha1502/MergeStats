@@ -99,3 +99,14 @@ The frontend will run on http://localhost:5173 (or another port if 5173 is in us
 2. Frontend: React with TypeScript and Tailwind CSS
 3. Charts: Chart.js
 4. API: GitHub REST API
+
+## 🖼️ Screenshots
+
+### 📊 Dashboard View
+
+![Dashboard](./assets/dashboard.png)
+
+![Graph](./assets/Graph1.png)
+
+![PR details](./assets/Graph2.png)
+
