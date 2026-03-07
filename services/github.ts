@@ -8,7 +8,11 @@ export async function fetchPRs(
   page = 1,
   allPRs: RawPR[] = []
 ): Promise<RawPR[]> {
-  const url = `https://api.github.com/search/issues?q=type:pr+author:${username}+created:${startDate}..${endDate}&per_page=100&page=${page}`;
+  const params = new URLSearchParams();
+  params.set('q', `type:pr author:${username} created:${startDate}..${endDate}`);
+  params.set('per_page', '100');
+  params.set('page', String(page));
+  const url = `https://api.github.com/search/issues?${params.toString()}`;
   console.log(`Fetching page ${page}...`);
 
   const data = await githubFetch<GitHubSearchResult>(url);

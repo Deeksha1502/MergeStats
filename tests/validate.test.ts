@@ -19,6 +19,32 @@ describe('validateStatsInput', () => {
     });
   });
 
+  describe('username validation', () => {
+    it('returns error for username with special characters', () => {
+      expect(validateStatsInput('bad user!', 2024, 1)).toMatch(/Invalid GitHub username/);
+    });
+
+    it('returns error for username with consecutive hyphens', () => {
+      expect(validateStatsInput('bad--user', 2024, 1)).toMatch(/Invalid GitHub username/);
+    });
+
+    it('returns error for username starting with a hyphen', () => {
+      expect(validateStatsInput('-baduser', 2024, 1)).toMatch(/Invalid GitHub username/);
+    });
+
+    it('returns error for username ending with a hyphen', () => {
+      expect(validateStatsInput('baduser-', 2024, 1)).toMatch(/Invalid GitHub username/);
+    });
+
+    it('accepts username with hyphens', () => {
+      expect(validateStatsInput('my-username', 2024, 1)).toBeNull();
+    });
+
+    it('accepts single character username', () => {
+      expect(validateStatsInput('a', 2024, 1)).toBeNull();
+    });
+  });
+
   describe('month validation', () => {
     it('returns error for month 0', () => {
       expect(validateStatsInput('octocat', 2024, 0)).toMatch(/Invalid month/);
@@ -28,8 +54,12 @@ describe('validateStatsInput', () => {
       expect(validateStatsInput('octocat', 2024, 13)).toMatch(/Invalid month/);
     });
 
-    it('returns error for non-numeric month', () => {
+    it('returns error for non-numeric month string', () => {
       expect(validateStatsInput('octocat', 2024, 'abc')).toMatch(/Invalid month/);
+    });
+
+    it('returns error for partial-numeric month like "6abc"', () => {
+      expect(validateStatsInput('octocat', 2024, '6abc')).toMatch(/Invalid month/);
     });
 
     it('accepts valid months 1-12', () => {
@@ -51,6 +81,10 @@ describe('validateStatsInput', () => {
 
     it('returns error for non-numeric year', () => {
       expect(validateStatsInput('octocat', 'xyz', 1)).toMatch(/Invalid year/);
+    });
+
+    it('returns error for partial-numeric year like "2024abc"', () => {
+      expect(validateStatsInput('octocat', '2024abc', 1)).toMatch(/Invalid year/);
     });
 
     it('accepts year 2000', () => {

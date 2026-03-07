@@ -8,6 +8,12 @@ const router = Router();
 router.post('/', async (req: Request, res: Response) => {
   try {
     console.log('Received request:', req.body);
+
+    if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
+      res.status(400).json({ error: 'Request body must be a JSON object' });
+      return;
+    }
+
     const { username, year, month } = req.body as {
       username: unknown;
       year: unknown;
