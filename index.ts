@@ -1,7 +1,9 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import statsRouter from './routes/stats';
+
+dotenv.config();
 
 if (!process.env.GITHUB_TOKEN) {
   console.error('Error: GitHub token not found. Please set GITHUB_TOKEN in your .env file.');
