@@ -1,8 +1,12 @@
 # Environment variables
 .env
+.env.*
 
 # Node modules
 node_modules/
+
+# TypeScript build output
+dist/
 
 # Logs
 logs
