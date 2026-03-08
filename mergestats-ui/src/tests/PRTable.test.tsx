@@ -19,6 +19,7 @@ describe('PRTable', () => {
   describe('table headers', () => {
     it('renders all column headers', () => {
       render(<PRTable prDetails={[]} />);
+      expect(screen.getByText('#')).toBeInTheDocument();
       expect(screen.getByText('Title')).toBeInTheDocument();
       expect(screen.getByText('Repository')).toBeInTheDocument();
       expect(screen.getByText('Status')).toBeInTheDocument();
@@ -50,15 +51,24 @@ describe('PRTable', () => {
       expect(link).toHaveAttribute('rel', 'noreferrer');
     });
 
-    it('renders the repository name', () => {
+    it('renders the short repository name without org prefix', () => {
       render(<PRTable prDetails={[basePR]} />);
-      expect(screen.getByText('org/my-repo')).toBeInTheDocument();
+      expect(screen.getByText('my-repo')).toBeInTheDocument();
     });
 
-    it('renders the created date formatted as a locale date string', () => {
+    it('renders the created date in short locale format', () => {
       render(<PRTable prDetails={[basePR]} />);
-      const expected = new Date('2024-03-15T10:00:00Z').toLocaleDateString();
+      const expected = new Date('2024-03-15T10:00:00Z').toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
       expect(screen.getByText(expected)).toBeInTheDocument();
+    });
+
+    it('shows serial number starting at 1', () => {
+      render(<PRTable prDetails={[basePR]} />);
+      expect(screen.getByText('1')).toBeInTheDocument();
     });
 
     it('shows Merged status for merged PRs', () => {
@@ -96,6 +106,18 @@ describe('PRTable', () => {
       const prs: PRDetail[] = [basePR, { ...basePR, number: 43 }];
       render(<PRTable prDetails={prs} />);
       expect(screen.getAllByRole('row')).toHaveLength(3); // 1 header + 2 data
+    });
+
+    it('renders sequential serial numbers', () => {
+      const prs: PRDetail[] = [
+        basePR,
+        { ...basePR, number: 43, title: 'Add feature' },
+        { ...basePR, number: 44, title: 'Update docs' },
+      ];
+      render(<PRTable prDetails={prs} />);
+      expect(screen.getByText('1')).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument();
+      expect(screen.getByText('3')).toBeInTheDocument();
     });
   });
 });

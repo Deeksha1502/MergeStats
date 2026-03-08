@@ -22,14 +22,14 @@ describe('Home', () => {
   describe('rendering', () => {
     it('renders the page heading', () => {
       renderHome();
-      expect(screen.getByText('GitHub PR Statistics')).toBeInTheDocument();
+      expect(screen.getByText('GitHub PR Analytics')).toBeInTheDocument();
     });
 
-    it('renders username, year, and month inputs', () => {
+    it('renders username input and year/month selects', () => {
       renderHome();
-      expect(screen.getByLabelText('GitHub Username:')).toBeInTheDocument();
-      expect(screen.getByLabelText('Year:')).toBeInTheDocument();
-      expect(screen.getByLabelText('Month (1-12):')).toBeInTheDocument();
+      expect(screen.getByLabelText('GitHub Username')).toBeInTheDocument();
+      expect(screen.getByLabelText('Year')).toBeInTheDocument();
+      expect(screen.getByLabelText('Month')).toBeInTheDocument();
     });
 
     it('renders the submit button', () => {
@@ -39,54 +39,46 @@ describe('Home', () => {
 
     it('pre-fills year with current year', () => {
       renderHome();
-      const yearInput = screen.getByLabelText('Year:') as HTMLInputElement;
-      expect(yearInput.value).toBe(String(new Date().getFullYear()));
+      const yearSelect = screen.getByLabelText('Year') as HTMLSelectElement;
+      expect(yearSelect.value).toBe(String(new Date().getFullYear()));
     });
 
     it('pre-fills month with current month', () => {
       renderHome();
-      const monthInput = screen.getByLabelText('Month (1-12):') as HTMLInputElement;
-      expect(monthInput.value).toBe(String(new Date().getMonth() + 1));
+      const monthSelect = screen.getByLabelText('Month') as HTMLSelectElement;
+      expect(monthSelect.value).toBe(String(new Date().getMonth() + 1));
     });
   });
 
   describe('form interaction', () => {
     it('updates username as user types', async () => {
       renderHome();
-      const input = screen.getByLabelText('GitHub Username:') as HTMLInputElement;
+      const input = screen.getByLabelText('GitHub Username') as HTMLInputElement;
       await userEvent.type(input, 'octocat');
       expect(input.value).toBe('octocat');
     });
 
-    it('updates year as user types', async () => {
+    it('updates year when an option is selected', async () => {
       renderHome();
-      const input = screen.getByLabelText('Year:') as HTMLInputElement;
-      await userEvent.clear(input);
-      await userEvent.type(input, '2023');
-      expect(input.value).toBe('2023');
+      const select = screen.getByLabelText('Year') as HTMLSelectElement;
+      await userEvent.selectOptions(select, '2023');
+      expect(select.value).toBe('2023');
     });
 
-    it('updates month as user types', async () => {
+    it('updates month when an option is selected', async () => {
       renderHome();
-      const input = screen.getByLabelText('Month (1-12):') as HTMLInputElement;
-      await userEvent.clear(input);
-      await userEvent.type(input, '6');
-      expect(input.value).toBe('6');
+      const select = screen.getByLabelText('Month') as HTMLSelectElement;
+      await userEvent.selectOptions(select, '6');
+      expect(select.value).toBe('6');
     });
   });
 
   describe('form submission', () => {
     it('navigates to /stats with correct state on submit', async () => {
       renderHome();
-      await userEvent.type(screen.getByLabelText('GitHub Username:'), 'octocat');
-
-      const yearInput = screen.getByLabelText('Year:');
-      await userEvent.clear(yearInput);
-      await userEvent.type(yearInput, '2024');
-
-      const monthInput = screen.getByLabelText('Month (1-12):');
-      await userEvent.clear(monthInput);
-      await userEvent.type(monthInput, '3');
+      await userEvent.type(screen.getByLabelText('GitHub Username'), 'octocat');
+      await userEvent.selectOptions(screen.getByLabelText('Year'), '2024');
+      await userEvent.selectOptions(screen.getByLabelText('Month'), '3');
 
       await userEvent.click(screen.getByRole('button', { name: /Generate Statistics/i }));
 

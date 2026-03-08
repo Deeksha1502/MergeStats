@@ -14,6 +14,10 @@ vi.mock('chart.js', () => ({
   Legend: {},
 }));
 
+vi.mock('../context/ThemeContext', () => ({
+  useTheme: () => ({ theme: 'light', toggle: vi.fn() }),
+}));
+
 const baseStats: PRStats = {
   totalPRs: 10,
   mergedPRs: 7,
@@ -78,11 +82,11 @@ describe('StatsSummary', () => {
 
     it('renders all stat labels', () => {
       render(<StatsSummary stats={baseStats} />);
-      expect(screen.getByText(/Total PRs created/)).toBeInTheDocument();
-      expect(screen.getByText(/Merged/)).toBeInTheDocument();
-      expect(screen.getByText(/Closed without merging/)).toBeInTheDocument();
-      expect(screen.getByText(/Still open/)).toBeInTheDocument();
-      expect(screen.getByText(/Success rate/)).toBeInTheDocument();
+      expect(screen.getByText('Total PRs')).toBeInTheDocument();
+      expect(screen.getByText('Merged')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
+      expect(screen.getByText('Open')).toBeInTheDocument();
+      expect(screen.getByText('Success Rate')).toBeInTheDocument();
     });
   });
 
