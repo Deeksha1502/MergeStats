@@ -10,6 +10,19 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
+const mockLogin = vi.fn();
+const mockLogout = vi.fn();
+
+// Default: authenticated user
+vi.mock('../context/AuthContext', () => ({
+  useAuth: () => ({
+    user: { login: 'testuser', avatar_url: 'https://example.com/avatar.png', name: 'Test User' },
+    loading: false,
+    login: mockLogin,
+    logout: mockLogout,
+  }),
+}));
+
 function renderHome() {
   return render(
     <MemoryRouter>
@@ -19,7 +32,7 @@ function renderHome() {
 }
 
 describe('Home', () => {
-  describe('rendering', () => {
+  describe('rendering (authenticated)', () => {
     it('renders the page heading', () => {
       renderHome();
       expect(screen.getByText('GitHub PR Analytics')).toBeInTheDocument();
@@ -84,6 +97,18 @@ describe('Home', () => {
 
       expect(mockNavigate).toHaveBeenCalledWith('/stats', {
         state: { username: 'octocat', year: 2024, month: 3 },
+      });
+    });
+
+    it('falls back to logged-in username when input is empty', async () => {
+      renderHome();
+      await userEvent.selectOptions(screen.getByLabelText('Year'), '2024');
+      await userEvent.selectOptions(screen.getByLabelText('Month'), '3');
+
+      await userEvent.click(screen.getByRole('button', { name: /Generate Statistics/i }));
+
+      expect(mockNavigate).toHaveBeenCalledWith('/stats', {
+        state: { username: 'testuser', year: 2024, month: 3 },
       });
     });
   });

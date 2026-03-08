@@ -5,6 +5,7 @@ export async function fetchPRs(
   username: string,
   startDate: string,
   endDate: string,
+  token: string,
   page = 1,
   allPRs: RawPR[] = []
 ): Promise<RawPR[]> {
@@ -15,7 +16,7 @@ export async function fetchPRs(
   const url = `https://api.github.com/search/issues?${params.toString()}`;
   console.log(`Fetching page ${page}...`);
 
-  const data = await githubFetch<GitHubSearchResult>(url);
+  const data = await githubFetch<GitHubSearchResult>(url, token);
 
   if (!data.items || data.items.length === 0) {
     console.log(`No PRs found for user ${username} in the given time period.`);
@@ -25,13 +26,13 @@ export async function fetchPRs(
   const combinedPRs = [...allPRs, ...data.items];
 
   if (data.items.length === 100 && page < 10) {
-    return fetchPRs(username, startDate, endDate, page + 1, combinedPRs);
+    return fetchPRs(username, startDate, endDate, token, page + 1, combinedPRs);
   }
 
   return combinedPRs;
 }
 
-export async function getPRDetails(prs: RawPR[]): Promise<PRDetail[]> {
+export async function getPRDetails(prs: RawPR[], token: string): Promise<PRDetail[]> {
   const prDetails: PRDetail[] = [];
 
   for (let i = 0; i < prs.length; i++) {
@@ -42,7 +43,7 @@ export async function getPRDetails(prs: RawPR[]): Promise<PRDetail[]> {
       const repoFullName = pr.repository_url.split('/repos/')[1];
       const prUrl = `https://api.github.com/repos/${repoFullName}/pulls/${pr.number}`;
 
-      const prData = await githubFetch<GitHubPRResult>(prUrl);
+      const prData = await githubFetch<GitHubPRResult>(prUrl, token);
 
       prDetails.push({
         title: pr.title,

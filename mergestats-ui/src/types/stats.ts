@@ -35,3 +35,15 @@ export interface StatsResponse {
   stats: PRStats;
   prDetails: PRDetail[];
 }
+
+export interface GitHubAuthUser {
+  login: string;
+  avatar_url: string;
+  name: string | null;
+}
+
+export interface AuthState {
+  authenticated: boolean;
+  user: GitHubAuthUser | null;
+  loading: boolean;
+}

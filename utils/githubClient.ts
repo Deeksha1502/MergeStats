@@ -1,8 +1,8 @@
 import fetch, { Response } from 'node-fetch';
 
-function buildHeaders(): Record<string, string> {
+function buildHeaders(token: string): Record<string, string> {
   return {
-    Authorization: `token ${process.env.GITHUB_TOKEN}`,
+    Authorization: `token ${token}`,
     'User-Agent': 'mergestats-script',
   };
 }
@@ -20,8 +20,8 @@ function checkRateLimit(response: Response): void {
   }
 }
 
-export async function githubFetch<T>(url: string): Promise<T> {
-  const response = await fetch(url, { headers: buildHeaders() });
+export async function githubFetch<T>(url: string, token: string): Promise<T> {
+  const response = await fetch(url, { headers: buildHeaders(token) });
   checkRateLimit(response);
 
   const contentType = response.headers.get('content-type') ?? '';

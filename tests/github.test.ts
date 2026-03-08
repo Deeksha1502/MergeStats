@@ -6,6 +6,8 @@ jest.mock('../utils/githubClient');
 import { githubFetch } from '../utils/githubClient';
 const mockGithubFetch = githubFetch as jest.MockedFunction<typeof githubFetch>;
 
+const TEST_TOKEN = 'test-token';
+
 // ─── generateStats ────────────────────────────────────────────────────────────
 
 describe('generateStats', () => {
@@ -88,7 +90,7 @@ describe('getPRDetails', () => {
       closed_at: '2024-03-02T10:00:00Z',
     });
 
-    const details = await getPRDetails([rawPR]);
+    const details = await getPRDetails([rawPR], TEST_TOKEN);
 
     expect(details).toHaveLength(1);
     expect(details[0]).toMatchObject({
@@ -108,14 +110,14 @@ describe('getPRDetails', () => {
       closed_at: null,
     });
 
-    const details = await getPRDetails([rawPR]);
+    const details = await getPRDetails([rawPR], TEST_TOKEN);
     expect(details[0].merged).toBe(false);
     expect(details[0].state).toBe('open');
   });
 
   it('skips a PR when githubFetch throws', async () => {
     mockGithubFetch.mockRejectedValueOnce(new Error('Rate limit'));
-    const details = await getPRDetails([rawPR]);
+    const details = await getPRDetails([rawPR], TEST_TOKEN);
     expect(details).toHaveLength(0);
   });
 
@@ -125,9 +127,24 @@ describe('getPRDetails', () => {
       .mockResolvedValueOnce({ merged: true, state: 'closed', merged_at: null, closed_at: null })
       .mockRejectedValueOnce(new Error('Not found'));
 
-    const details = await getPRDetails([rawPR, pr2]);
+    const details = await getPRDetails([rawPR, pr2], TEST_TOKEN);
     expect(details).toHaveLength(1);
     expect(details[0].number).toBe(42);
+  });
+
+  it('passes the token to githubFetch', async () => {
+    mockGithubFetch.mockResolvedValueOnce({
+      merged: false,
+      state: 'open',
+      merged_at: null,
+      closed_at: null,
+    });
+
+    await getPRDetails([rawPR], TEST_TOKEN);
+    expect(mockGithubFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      TEST_TOKEN
+    );
   });
 });
 
@@ -138,7 +155,7 @@ describe('fetchPRs', () => {
 
   it('returns empty array when no items found', async () => {
     mockGithubFetch.mockResolvedValueOnce({ items: [], total_count: 0 });
-    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31');
+    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31', TEST_TOKEN);
     expect(prs).toEqual([]);
   });
 
@@ -151,7 +168,7 @@ describe('fetchPRs', () => {
       html_url: 'https://github.com/org/repo/pull/1',
     };
     mockGithubFetch.mockResolvedValueOnce({ items: [item], total_count: 1 });
-    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31');
+    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31', TEST_TOKEN);
     expect(prs).toHaveLength(1);
     expect(prs[0].title).toBe('PR 1');
   });
@@ -176,15 +193,24 @@ describe('fetchPRs', () => {
       .mockResolvedValueOnce({ items: page1Items, total_count: 101 })
       .mockResolvedValueOnce({ items: [page2Item], total_count: 101 });
 
-    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31');
+    const prs = await fetchPRs('octocat', '2024-01-01', '2024-01-31', TEST_TOKEN);
     expect(prs).toHaveLength(101);
     expect(mockGithubFetch).toHaveBeenCalledTimes(2);
   });
 
   it('throws when githubFetch throws', async () => {
     mockGithubFetch.mockRejectedValueOnce(new Error('GitHub API error: Bad credentials'));
-    await expect(fetchPRs('octocat', '2024-01-01', '2024-01-31')).rejects.toThrow(
+    await expect(fetchPRs('octocat', '2024-01-01', '2024-01-31', TEST_TOKEN)).rejects.toThrow(
       'GitHub API error: Bad credentials'
+    );
+  });
+
+  it('passes the token to githubFetch', async () => {
+    mockGithubFetch.mockResolvedValueOnce({ items: [], total_count: 0 });
+    await fetchPRs('octocat', '2024-01-01', '2024-01-31', TEST_TOKEN);
+    expect(mockGithubFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      TEST_TOKEN
     );
   });
 });
