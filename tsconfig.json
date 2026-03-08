@@ -12,5 +12,5 @@
     "resolveJsonModule": true
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "dist", "mergestats-ui"]
+  "exclude": ["node_modules", "dist", "mergestats-ui", "tests"]
 }
