@@ -8,9 +8,9 @@ describe('PRStatusBadge', () => {
     expect(screen.getByText('Merged')).toBeInTheDocument();
   });
 
-  it('applies green colour for merged', () => {
+  it('applies violet colour for merged', () => {
     render(<PRStatusBadge merged={true} state="closed" />);
-    expect(screen.getByText('Merged')).toHaveClass('text-green-600');
+    expect(screen.getByText('Merged')).toHaveClass('text-violet-700');
   });
 
   it('shows "Closed" when not merged and state is closed', () => {
@@ -20,7 +20,7 @@ describe('PRStatusBadge', () => {
 
   it('applies red colour for closed', () => {
     render(<PRStatusBadge merged={false} state="closed" />);
-    expect(screen.getByText('Closed')).toHaveClass('text-red-600');
+    expect(screen.getByText('Closed')).toHaveClass('text-red-700');
   });
 
   it('shows "Open" when state is open', () => {
@@ -28,9 +28,9 @@ describe('PRStatusBadge', () => {
     expect(screen.getByText('Open')).toBeInTheDocument();
   });
 
-  it('applies blue colour for open', () => {
+  it('applies green colour for open', () => {
     render(<PRStatusBadge merged={false} state="open" />);
-    expect(screen.getByText('Open')).toHaveClass('text-blue-600');
+    expect(screen.getByText('Open')).toHaveClass('text-green-700');
   });
 
   it('shows "Merged" not "Closed" when both merged=true and state=closed', () => {

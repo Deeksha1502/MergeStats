@@ -52,7 +52,12 @@ router.post('/', async (req: Request, res: Response) => {
     res.json({ username, period: `${monthStr}/${yearInt}`, stats, prDetails });
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ error: (error as Error).message });
+    const message = (error as Error).message ?? '';
+    if (message.includes('Validation Failed') || message.includes('Could not find user')) {
+      res.status(404).json({ error: `Could not find GitHub user "${req.body?.username}". Please check the username and try again.` });
+      return;
+    }
+    res.status(500).json({ error: message });
   }
 });
 
