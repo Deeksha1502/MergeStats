@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import axios from 'axios';
 import { fetchStats } from '../api/statsApi';
 import type { StatsResponse } from '../types/stats';
 
-vi.mock('axios');
-const mockPost = vi.mocked(axios.post);
+// vi.hoisted ensures mockPost is available when vi.mock runs (since vi.mock is hoisted)
+const mockPost = vi.hoisted(() => vi.fn());
+
+vi.mock('axios', () => ({
+  default: {
+    create: vi.fn(() => ({ post: mockPost })),
+  },
+}));
 
 const mockResponse: StatsResponse = {
   username: 'octocat',

@@ -57,3 +57,15 @@ export interface GitHubPRResult {
   closed_at: string | null;
   message?: string;
 }
+
+export interface GitHubUser {
+  login: string;
+  avatar_url: string;
+  name: string | null;
+}
+
+export interface OAuthTokenResponse {
+  access_token: string;
+  token_type: string;
+  scope: string;
+}
