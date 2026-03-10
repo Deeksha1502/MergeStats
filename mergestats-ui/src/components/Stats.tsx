@@ -104,6 +104,14 @@ function Stats() {
         </div>
       </div>
 
+      {/* Public repos note */}
+      <div className="mb-6 flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/5 dark:text-blue-300">
+        <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Stats are based on public repositories only. PRs from private repos are not included.</span>
+      </div>
+
       <StatsSummary stats={data.stats} />
 
       {/* Bar chart */}
