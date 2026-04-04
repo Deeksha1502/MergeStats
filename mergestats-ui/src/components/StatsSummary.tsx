@@ -90,13 +90,13 @@ export function StatsSummary({ stats }: Props) {
   const cards = statCards(stats, successRate);
 
   return (
-    <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-none backdrop-blur-sm transition-colors duration-200">
+    <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-none backdrop-blur-sm transition-colors duration-200">
       <h2 className="mb-5 text-lg font-semibold text-gray-900 dark:text-gray-100">Summary</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 mb-6">
         {cards.map((card) => (
           <div
             key={card.label}
-            className={`flex flex-col gap-2 rounded-xl ${card.bg} p-4 ring-1 ${card.ring}`}
+            className={`flex flex-col gap-2 rounded-xl ${card.bg} p-4 ring-1 ${card.ring} transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md cursor-default`}
           >
             <div className={card.color}>{card.icon}</div>
             <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
@@ -105,7 +105,7 @@ export function StatsSummary({ stats }: Props) {
         ))}
       </div>
       <div className="flex justify-center">
-        <div className="h-52 w-52">
+        <div className="h-40 w-40 sm:h-52 sm:w-52">
           <Pie
             data={statusData}
             options={{

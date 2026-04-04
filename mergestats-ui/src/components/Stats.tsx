@@ -88,7 +88,7 @@ function Stats() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 px-4 pb-16">
+    <div className="max-w-4xl mx-auto mt-6 sm:mt-8 px-3 sm:px-4 pb-16">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 shadow-lg shadow-violet-500/25">
@@ -97,7 +97,7 @@ function Stats() {
           </svg>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
             <span className="text-violet-600 dark:text-violet-400">@{data.username}</span>
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-500">PR activity for {data.period}</p>
@@ -109,7 +109,7 @@ function Stats() {
       {/* Bar chart */}
       <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-none backdrop-blur-sm transition-colors duration-200">
         <h2 className="mb-5 text-lg font-semibold text-gray-900 dark:text-gray-100">Top Repositories</h2>
-        <div className="h-72">
+        <div className="h-56 sm:h-72">
           <Bar
             data={reposData}
             options={{

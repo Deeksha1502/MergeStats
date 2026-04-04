@@ -25,8 +25,8 @@ function Home() {
   return (
     <div className="flex min-h-[calc(100vh-65px)] flex-col items-center justify-center px-4">
       {/* Hero text */}
-      <div className="mb-10 text-center">
-        <h1 className="mb-3 text-5xl font-extrabold tracking-tight">
+      <div className="mb-8 sm:mb-10 text-center">
+        <h1 className="mb-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
           <span className="bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
             GitHub PR Analytics
           </span>
@@ -37,7 +37,7 @@ function Home() {
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl shadow-gray-200/60 dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-black/40 backdrop-blur-sm transition-colors duration-200">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-5 sm:p-8 shadow-xl shadow-gray-200/60 dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-black/40 backdrop-blur-sm transition-colors duration-200">
         {authLoading ? (
           <div className="flex justify-center py-8">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-violet-500 dark:border-gray-700"></div>
