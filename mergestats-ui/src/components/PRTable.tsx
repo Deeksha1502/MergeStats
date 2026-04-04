@@ -13,7 +13,7 @@ export function PRTable({ prDetails }: Props) {
       {/* ── Mobile card list (hidden on sm+) ── */}
       <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800/60 sm:hidden">
         {prDetails.map((pr, index) => (
-          <div key={pr.number} className="py-3 flex flex-col gap-1.5">
+          <div key={pr.url} className="py-3 flex flex-col gap-1.5">
             {/* Row: index + title */}
             <div className="flex items-start gap-2">
               <span className="mt-0.5 shrink-0 text-xs text-gray-400 dark:text-gray-600 tabular-nums w-5">
@@ -48,7 +48,7 @@ export function PRTable({ prDetails }: Props) {
       </div>
 
       {/* ── Desktop table (hidden below sm) ── */}
-      <div className="hidden sm:block overflow-x-auto">
+      <div className="hidden sm:block overflow-x-auto" data-testid="pr-table-desktop">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-500">

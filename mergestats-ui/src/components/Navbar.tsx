@@ -8,7 +8,7 @@ function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 transition-colors duration-200">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-blue-500 shadow-lg shadow-violet-500/25">
             <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
