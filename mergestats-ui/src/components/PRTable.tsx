@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { PRDetail } from '../types/stats';
 import { PRStatusBadge } from './PRStatusBadge';
 
@@ -12,6 +12,11 @@ export function PRTable({ prDetails }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(prDetails.length / PAGE_SIZE) || 1;
 
+  // Reset to first page when new PR data is loaded
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [prDetails]);
+
   const paginatedPRs = prDetails.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
@@ -22,13 +27,16 @@ export function PRTable({ prDetails }: Props) {
 
   if (prDetails.length === 0) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-none backdrop-blur-sm transition-colors duration-200">
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/60 dark:shadow-none backdrop-blur-sm transition-colors duration-200" data-testid="pr-table-desktop">
         <h2 className="mb-5 text-lg font-semibold text-gray-900 dark:text-gray-100">PR Details</h2>
         <table className="w-full text-sm sm:max-w-none">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-500">
               <th className="pb-3 pr-4 w-10">#</th>
               <th className="pb-3 pr-4">Title</th>
+              <th className="pb-3 pr-4">Repository</th>
+              <th className="pb-3 pr-4">Status</th>
+              <th className="pb-3">Created</th>
             </tr>
           </thead>
         </table>
