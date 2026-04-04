@@ -10,8 +10,9 @@ describe('validateStatsInput', () => {
       expect(validateStatsInput('octocat', '', 1)).toBe('Missing required parameters');
     });
 
-    it('returns error when month is missing', () => {
-      expect(validateStatsInput('octocat', 2024, '')).toBe('Missing required parameters');
+    it('returns null (success) when month is missing in year-only mode', () => {
+      expect(validateStatsInput('octocat', 2024, '')).toBeNull();
+      expect(validateStatsInput('octocat', 2024, undefined)).toBeNull();
     });
 
     it('returns error when all fields are missing', () => {

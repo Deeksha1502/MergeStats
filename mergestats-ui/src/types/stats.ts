@@ -1,7 +1,7 @@
 export interface LocationState {
   username: string;
   year: number;
-  month: number;
+  month?: number;
 }
 
 export interface PRDetail {

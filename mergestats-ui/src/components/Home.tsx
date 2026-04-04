@@ -7,16 +7,25 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+type FilterMode = 'monthly' | 'yearly';
+
 function Home() {
   const { user, loading: authLoading, login } = useAuth();
   const [username, setUsername] = useState('');
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [filterMode, setFilterMode] = useState<FilterMode>('monthly');
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/stats', { state: { username: username || user?.login, year, month } });
+    navigate('/stats', {
+      state: {
+        username: username || user?.login,
+        year,
+        ...(filterMode === 'monthly' ? { month } : {}),
+      },
+    });
   };
 
   const currentYear = new Date().getFullYear();
@@ -86,8 +95,37 @@ function Home() {
               </p>
             </div>
 
-            {/* Year + Month */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Filter mode toggle */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by</span>
+              <div className="flex rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setFilterMode('monthly')}
+                  className={`flex-1 py-2 text-sm font-medium transition-colors ${
+                    filterMode === 'monthly'
+                      ? 'bg-violet-600 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Month
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterMode('yearly')}
+                  className={`flex-1 py-2 text-sm font-medium transition-colors ${
+                    filterMode === 'yearly'
+                      ? 'bg-violet-600 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  Year
+                </button>
+              </div>
+            </div>
+
+            {/* Year + (Month — only in monthly mode) */}
+            <div className={`grid gap-4 ${filterMode === 'monthly' ? 'grid-cols-2' : 'grid-cols-1'}`}>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="year" className="text-sm font-medium text-gray-700 dark:text-gray-300">Year</label>
                 <select
@@ -102,20 +140,23 @@ function Home() {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="month" className="text-sm font-medium text-gray-700 dark:text-gray-300">Month</label>
-                <select
-                  id="month"
-                  value={month}
-                  onChange={(e) => setMonth(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                  required
-                >
-                  {MONTHS.map((name, i) => (
-                    <option key={i + 1} value={i + 1}>{name}</option>
-                  ))}
-                </select>
-              </div>
+
+              {filterMode === 'monthly' && (
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="month" className="text-sm font-medium text-gray-700 dark:text-gray-300">Month</label>
+                  <select
+                    id="month"
+                    value={month}
+                    onChange={(e) => setMonth(Number(e.target.value))}
+                    className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    required
+                  >
+                    {MONTHS.map((name, i) => (
+                      <option key={i + 1} value={i + 1}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             <button

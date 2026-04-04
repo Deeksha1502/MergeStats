@@ -11,3 +11,9 @@ export function buildDateRange(year: number, month: number): DateRange {
   const endDate = `${year}-${monthStr}-${lastDay}`;
   return { startDate, endDate, monthStr };
 }
+
+export function buildYearRange(year: number): DateRange {
+  const startDate = `${year}-01-01`;
+  const endDate = `${year}-12-31`;
+  return { startDate, endDate, monthStr: '' };
+}

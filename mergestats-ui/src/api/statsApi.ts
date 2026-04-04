@@ -11,12 +11,12 @@ const api = axios.create({
 export async function fetchStats(
   username: string,
   year: number | string,
-  month: number | string
+  month?: number | string
 ): Promise<StatsResponse> {
   const { data } = await api.post<StatsResponse>('/api/stats', {
     username,
     year,
-    month,
+    ...(month !== undefined ? { month } : {}),
   });
   return data;
 }
