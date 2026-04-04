@@ -94,12 +94,15 @@ describe('useStats', () => {
       expect(result.current.error).toBe('Missing required parameters');
     });
 
-    it('sets error when month is undefined', async () => {
+    it('succeeds in year-only mode when month is undefined', async () => {
+      mockFetchStats.mockResolvedValueOnce(mockResponse);
       const { result } = renderHook(() => useStats('octocat', 2024, undefined));
 
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      expect(result.current.error).toBe('Missing required parameters');
+      expect(result.current.error).toBeNull();
+      expect(result.current.data).toEqual(mockResponse);
+      expect(mockFetchStats).toHaveBeenCalledWith('octocat', 2024, undefined);
     });
   });
 });

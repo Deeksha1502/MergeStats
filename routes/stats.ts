@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { fetchPRs, getPRDetails, generateStats } from '../services/github';
-import { buildDateRange } from '../utils/dateUtils';
+import { buildDateRange, buildYearRange } from '../utils/dateUtils';
 import { validateStatsInput } from '../utils/validate';
 
 const router = Router();
@@ -33,7 +33,7 @@ router.post('/', async (req: Request, res: Response) => {
     const { username, year, month } = req.body as {
       username: unknown;
       year: unknown;
-      month: unknown;
+      month?: unknown;
     };
 
     const validationError = validateStatsInput(username, year, month);
@@ -42,12 +42,18 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const monthInt = parseInt(String(month), 10);
     const yearInt = parseInt(String(year), 10);
-    const { startDate, endDate, monthStr } = buildDateRange(yearInt, monthInt);
+
+    // When month is absent treat it as a full-year query
+    const isYearMode = month === undefined || month === null || month === '';
+    const { startDate, endDate, monthStr } = isYearMode
+      ? buildYearRange(yearInt)
+      : buildDateRange(yearInt, parseInt(String(month), 10));
+
+    const period = isYearMode ? String(yearInt) : `${monthStr}/${yearInt}`;
 
     console.log(
-      `Processing request for ${username}, period ${monthStr}/${yearInt} (${startDate} to ${endDate})`
+      `Processing request for ${username}, period ${period} (${startDate} to ${endDate})`
     );
 
     const prs = await fetchPRs(String(username), startDate, endDate, token);
@@ -55,7 +61,7 @@ router.post('/', async (req: Request, res: Response) => {
     if (prs.length === 0) {
       res.json({
         username,
-        period: `${monthStr}/${yearInt}`,
+        period,
         stats: { totalPRs: 0, mergedPRs: 0, closedPRs: 0, openPRs: 0, repos: {} },
         prDetails: [],
       });
@@ -65,7 +71,7 @@ router.post('/', async (req: Request, res: Response) => {
     const prDetails = await getPRDetails(prs, token);
     const stats = generateStats(prDetails);
 
-    res.json({ username, period: `${monthStr}/${yearInt}`, stats, prDetails });
+    res.json({ username, period, stats, prDetails });
   } catch (error) {
     console.error('API Error:', error);
     const message = (error as Error).message ?? '';

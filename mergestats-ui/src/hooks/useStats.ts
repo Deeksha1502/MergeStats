@@ -18,7 +18,7 @@ export function useStats(
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!username || !year || !month) {
+    if (!username || !year) {
       setError('Missing required parameters');
       setLoading(false);
       return;

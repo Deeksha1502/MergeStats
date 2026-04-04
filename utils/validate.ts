@@ -9,8 +9,7 @@ export function validateStatsInput(
 ): string | null {
   if (
     username === undefined || username === null || username === '' ||
-    year === undefined || year === null || year === '' ||
-    month === undefined || month === null || month === ''
+    year === undefined || year === null || year === ''
   ) {
     return 'Missing required parameters';
   }
@@ -20,15 +19,6 @@ export function validateStatsInput(
     return 'Invalid GitHub username.';
   }
 
-  const monthStr = String(month);
-  if (!INTEGER_RE.test(monthStr)) {
-    return 'Invalid month. Please enter a number between 1 and 12.';
-  }
-  const monthInt = parseInt(monthStr, 10);
-  if (monthInt < 1 || monthInt > 12) {
-    return 'Invalid month. Please enter a number between 1 and 12.';
-  }
-
   const yearStr = String(year);
   if (!INTEGER_RE.test(yearStr)) {
     return 'Invalid year.';
@@ -36,6 +26,18 @@ export function validateStatsInput(
   const yearInt = parseInt(yearStr, 10);
   if (yearInt < 2000 || yearInt > new Date().getFullYear()) {
     return 'Invalid year.';
+  }
+
+  // Month is optional — when omitted the full year is queried
+  if (month !== undefined && month !== null && month !== '') {
+    const monthStr = String(month);
+    if (!INTEGER_RE.test(monthStr)) {
+      return 'Invalid month. Please enter a number between 1 and 12.';
+    }
+    const monthInt = parseInt(monthStr, 10);
+    if (monthInt < 1 || monthInt > 12) {
+      return 'Invalid month. Please enter a number between 1 and 12.';
+    }
   }
 
   return null;
